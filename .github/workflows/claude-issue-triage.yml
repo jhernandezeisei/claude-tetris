@@ -76,6 +76,7 @@ jobs:
             4. Publica el diagnóstico como comentario. Usa SIEMPRE:
                gh issue comment $ISSUE_NUMBER --repo $REPO --edit-last --create-if-none --body "<markdown>"
                De este modo, si el issue se edita, se actualiza el mismo comentario en vez de crear otro.
+               El comentario DEBE estar escrito en Markdown compatible con GitHub (GFM): encabezados con `#`, listas con `-` o `1.`, bloques de código con triple acento grave (indicando el lenguaje), código en línea con acentos graves, tablas GFM y casillas `- [ ]` cuando corresponda. No uses HTML ni otros formatos que GitHub no renderice.
                Formato del comentario:
                ## 🔍 Diagnóstico automático
                ### Resumen
