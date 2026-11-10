@@ -180,3 +180,56 @@ kbd {
 .records-table tr.record-new td { background: #ffd54f; color: #0f0f17; font-weight: 700; }
 
 .overlay { overflow-y: auto; }
+
+/* ==== Menú de pausa ==== */
+.hidden {
+  display: none !important;
+}
+
+#pause-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.menu-btn {
+  width: 180px;
+  background: #7aa2f7;
+  color: #0f0f17;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  filter: brightness(1.15);
+}
+
+#pause-controls {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  color: #c0caf5;
+  text-align: left;
+}
+
+.level-select {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: #c0caf5;
+}
+
+.level-select select {
+  background: #1a1a26;
+  color: #c0caf5;
+  border: 1px solid #3b3b52;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
