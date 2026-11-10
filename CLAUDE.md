@@ -20,6 +20,8 @@ Toda la lógica vive en `game.js`, cargado como script clásico (no como módulo
 - La pausa y el game over cancelan el frame de animación y reutilizan el mismo elemento `#overlay`; `togglePause` reinicia `loop` manualmente.
 - La rotación (`rotateCW` + `tryRotate`) es una rotación matricial simple en sentido horario con kicks solo horizontales `[0, -1, 1, -2, 2]`.
 
+- Records: el bloque `// ==== Records ====` al final de `game.js` guarda en `localStorage` (`tetris.records`: top 5 + `bestCombo` + `maxLines`, todo con try/catch). `trackCombo` se llama desde `clearLines`, `showGameOverRecords` desde `endGame` y `resetRecordsRun` desde `init`. El juego ya NO llama a `init()` al cargar: muestra `#start-screen` y espera al botón Jugar (`started` protege el `keydown`, que además ignora eventos de `input`/`textarea`).
+
 ## Detalles a tener en cuenta
 
 - El tamaño en píxeles de los canvas está fijado en `index.html` (`#board` 300×600, `#next-canvas` 120×120). Si cambias `COLS`, `ROWS` o `BLOCK` en `game.js`, actualiza `width`/`height` del canvas a `COLS*BLOCK` × `ROWS*BLOCK`.
