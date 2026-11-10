@@ -20,6 +20,8 @@ Toda la lógica vive en `game.js`, cargado como script clásico (no como módulo
 - La pausa y el game over cancelan el frame de animación y reutilizan el mismo elemento `#overlay`; `togglePause` reinicia `loop` manualmente.
 - La rotación (`rotateCW` + `tryRotate`) es una rotación matricial simple en sentido horario con kicks solo horizontales `[0, -1, 1, -2, 2]`.
 
+- Skins: el bloque `// ==== Skins ====` de `game.js` define `SKINS` (`retro`, `neon`, `pastel`, `pixel`), cada uno con `colors[]` (mismos índices que `COLORS`), `bg`, `grid` y su `drawBlock`. `drawBlock` delega en el skin activo (`skin`), `draw()`/`drawNext()` pintan el fondo con `skin.bg` (ya no `clearRect`) y la preferencia se guarda en `localStorage` (`tetris.skin`). Si añades una pieza, amplía también `colors` de cada skin.
+
 ## Detalles a tener en cuenta
 
 - El tamaño en píxeles de los canvas está fijado en `index.html` (`#board` 300×600, `#next-canvas` 120×120). Si cambias `COLS`, `ROWS` o `BLOCK` en `game.js`, actualiza `width`/`height` del canvas a `COLS*BLOCK` × `ROWS*BLOCK`.
