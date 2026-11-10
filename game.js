@@ -42,6 +42,8 @@ const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
 const restartBtn = document.getElementById('restart-btn');
 
+let startLevel = 1;   // selección del menú (próxima partida)
+let baseLevel = 1;    // nivel mínimo de la partida en curso
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
 
 function createBoard() {
@@ -108,7 +110,7 @@ function clearLines() {
   if (cleared) {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
-    level = Math.floor(lines / 10) + 1;
+    level = Math.max(baseLevel, Math.floor(lines / 10) + 1);
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
@@ -225,6 +227,7 @@ function endGame() {
   cancelAnimationFrame(animId);
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
+  showPauseMenu(false);
   overlay.classList.remove('hidden');
 }
 
@@ -232,12 +235,16 @@ function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    resumeReset();
+    if (document.activeElement) document.activeElement.blur();
+    overlay.classList.add('hidden');
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
     overlayTitle.textContent = 'PAUSA';
     overlayScore.textContent = '';
+    showPauseMenu(true);
     overlay.classList.remove('hidden');
   }
 }
@@ -263,22 +270,64 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  baseLevel = startLevel;
+  level = baseLevel;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
   updateHUD();
   overlay.classList.add('hidden');
+  showPauseMenu(false);
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
+// ==== Menú de pausa ====
+const pauseMenu = document.getElementById('pause-menu');
+const resumeBtn = document.getElementById('resume-btn');
+const pauseRestartBtn = document.getElementById('pause-restart-btn');
+const controlsBtn = document.getElementById('controls-btn');
+const pauseControls = document.getElementById('pause-controls');
+const startLevelSel = document.getElementById('start-level');
+
+// Muestra el menú de pausa (y oculta el botón de game over) o al revés.
+function showPauseMenu(show) {
+  pauseMenu.classList.toggle('hidden', !show);
+  restartBtn.classList.toggle('hidden', show);
+  if (!show) {
+    pauseControls.classList.add('hidden');
+    controlsBtn.textContent = 'Ver controles';
+  }
+}
+
+// Al reanudar se descarta el tiempo acumulado para evitar caídas accidentales.
+function resumeReset() {
+  dropAccum = 0;
+}
+
+resumeBtn.addEventListener('click', () => { if (paused) togglePause(); });
+pauseRestartBtn.addEventListener('click', init);
+controlsBtn.addEventListener('click', () => {
+  const hidden = pauseControls.classList.toggle('hidden');
+  controlsBtn.textContent = hidden ? 'Ver controles' : 'Ocultar controles';
+});
+startLevelSel.addEventListener('change', () => {
+  startLevel = parseInt(startLevelSel.value, 10) || 1;
+});
+// Quita el foco de los botones para que Espacio/Enter no los activen al jugar.
+[resumeBtn, pauseRestartBtn, controlsBtn].forEach(el =>
+  el.addEventListener('click', () => el.blur()));
+// ==== Fin menú de pausa ====
+
 document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') {
+    if (!e.repeat && e.target !== startLevelSel) togglePause();
+    return;
+  }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':

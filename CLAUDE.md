@@ -17,7 +17,7 @@ Toda la lógica vive en `game.js`, cargado como script clásico (no como módulo
 - El tablero es una matriz `ROWS × COLS` de `0` o un índice de color/pieza del 1 al 8 (el 8 es la "tuerca", un anillo 3×3 con el centro vacío); `COLORS` y `PIECES` se indexan con ese mismo número (el índice 0 es `null`), así que para añadir una pieza basta ampliar ambos arrays (`randomPiece` usa `PIECES.length - 1`).
 - Flujo del juego: `loop` (requestAnimationFrame) acumula el tiempo y baja la pieza una vez por `dropInterval`; llama a `draw()` en cada frame. El bloqueo sigue la cadena `lockPiece` → `merge` → `clearLines` → `spawn`; `spawn` llama a `endGame()` si la nueva pieza colisiona.
 - `clearLines` se encarga de actualizar puntuación, nivel y velocidad (`dropInterval = max(100, 1000 - (level-1)*90)`). El soft drop y el hard drop suman sus propios puntos.
-- La pausa y el game over cancelan el frame de animación y reutilizan el mismo elemento `#overlay`; `togglePause` reinicia `loop` manualmente.
+- La pausa y el game over cancelan el frame de animación y reutilizan el mismo elemento `#overlay`; `togglePause` reinicia `loop` manualmente. La pausa (P o Escape) muestra el bloque `#pause-menu` (Reanudar, Reiniciar, Ver controles, Nivel inicial) y oculta `#restart-btn`; `showPauseMenu(bool)` alterna ambos y el game over muestra solo `#restart-btn`. El nivel inicial vive en `startLevel` (se aplica en `init()`; `clearLines` nunca baja de él). El código está en el bloque `// ==== Menú de pausa ====` de `game.js`.
 - La rotación (`rotateCW` + `tryRotate`) es una rotación matricial simple en sentido horario con kicks solo horizontales `[0, -1, 1, -2, 2]`.
 
 ## Detalles a tener en cuenta
