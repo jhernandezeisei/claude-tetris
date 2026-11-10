@@ -22,6 +22,8 @@ Toda la lógica vive en `game.js`, cargado como script clásico (no como módulo
 
 - Records: el bloque `// ==== Records ====` al final de `game.js` guarda en `localStorage` (`tetris.records`: top 5 + `bestCombo` + `maxLines`, todo con try/catch). `trackCombo` se llama desde `clearLines`, `showGameOverRecords` desde `endGame` y `resetRecordsRun` desde `init`. El juego ya NO llama a `init()` al cargar: muestra `#start-screen` y espera al botón Jugar (`started` protege el `keydown`, que además ignora eventos de `input`/`textarea`).
 
+- Skins: el bloque `// ==== Skins ====` de `game.js` define `SKINS` (`retro`, `neon`, `pastel`, `pixel`), cada uno con `colors[]` (mismos índices que `COLORS`), `bg`, `grid` y su `drawBlock`. `drawBlock` delega en el skin activo (`skin`), `draw()`/`drawNext()` pintan el fondo con `skin.bg` (ya no `clearRect`) y la preferencia se guarda en `localStorage` (`tetris.skin`). Si añades una pieza, amplía también `colors` de cada skin.
+
 ## Detalles a tener en cuenta
 
 - El tamaño en píxeles de los canvas está fijado en `index.html` (`#board` 300×600, `#next-canvas` 120×120). Si cambias `COLS`, `ROWS` o `BLOCK` en `game.js`, actualiza `width`/`height` del canvas a `COLS*BLOCK` × `ROWS*BLOCK`.
